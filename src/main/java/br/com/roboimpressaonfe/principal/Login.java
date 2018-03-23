@@ -66,7 +66,7 @@ public class Login {
 	 */
 	public Login() {
 		try {
-			initializeLoginPanel();
+			initializeParametrosPanel();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -142,8 +142,8 @@ public class Login {
 			protected String doInBackground() {
 				try {
 					robo = new Robo();
-					@SuppressWarnings("deprecation")
-					boolean sucesso = robo.efetuaLogin(cnpjField.getText(), passwordField.getText());
+					//boolean sucesso = robo.efetuaLogin(cnpjField.getText(), passwordField.getText());
+					boolean sucesso = true;
 					if (sucesso) {
 						statusLabel.setForeground(Color.BLUE);
 						statusLabel.setText("Login efetuado com sucesso!");
@@ -177,6 +177,20 @@ public class Login {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void initializeParametrosPanel() {
+		parametrosPanel = new JPanel();
+		frame = new JFrame();
+
+		frame.setTitle("OMA - Impressão de Notas Fiscais");
+		frame.setResizable(false);
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.setLocation(dim.width / 2 - frame.getWidth() / 2, dim.height / 2 - frame.getHeight() / 2);
+
+		frame.getContentPane().add(parametrosPanel);
+		
 		List<String> listaAnos = new ArrayList<>();
 		String[] meses = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
 		int anoInicial = 2006;
@@ -196,6 +210,7 @@ public class Login {
 		parametrosPanel = new JPanel();
 		parametrosPanel.setLayout(null);
 		parametrosPanel.setBounds(1, 5, 441, 268);
+		statusLabel = new JLabel("");
 		parametrosPanel.add(statusLabel);
 		parametrosPanel.add(selectMes);
 		parametrosPanel.add(selectAno);
@@ -203,6 +218,7 @@ public class Login {
 		btnProsseguir.setBounds(142, 139, 183, 20);
 		parametrosPanel.add(btnProsseguir);
 		frame.getContentPane().add(parametrosPanel);
+		robo = new Robo();
 		btnProsseguir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				selectMes.setEnabled(false);
@@ -298,8 +314,7 @@ public class Login {
 		try {
 			if (Desktop.isDesktopSupported()) {
 				try {
-					File myFile = new File(
-							robo.getPastaTempCriada() + File.separator + "NOTAS-" + mes + "-" + ano + ".pdf");
+					File myFile = new File(this.robo.getPastaTempCriada() + File.separator + "NOTAS-" + mes + "-" + ano + ".pdf");
 					Desktop.getDesktop().open(myFile);
 				} catch (IOException ex) {
 					ex.printStackTrace();

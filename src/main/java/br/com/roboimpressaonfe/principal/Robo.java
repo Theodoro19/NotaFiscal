@@ -17,28 +17,35 @@ import javax.imageio.ImageIO;
 import javax.swing.JProgressBar;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
 
 public class Robo {
 
-	private PhantomJSDriver driver;
+	// private PhantomJSDriver driver;
+
+	private ChromeDriver driver;
+
 	private Properties p;
 	private String paginaInicial;
 	private String pastaTempCriada;
 	public static int totalNotas;
 
-	public PhantomJSDriver getDriver() {
-		return driver;
-	}
+	// public PhantomJSDriver getDriver() {
+	// return driver;
+	// }
 
 	public String getPaginaInicial() {
 		return paginaInicial;
+	}
+
+	public ChromeDriver getDriver() {
+		return driver;
 	}
 
 	public void setPaginaInicial(String paginaInicial) {
@@ -59,22 +66,35 @@ public class Robo {
 
 	public Robo() {
 		try {
-			String caminhoPhantomJSEXE = new File("").getAbsolutePath() + "//resources//phantomjs.exe";
-			System.setProperty("phantomjs.binary.path", caminhoPhantomJSEXE);
-			DesiredCapabilities caps = new DesiredCapabilities();
-			caps.setJavascriptEnabled(true);
-			caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS,
-					new String[] { "--web-security=no", "--ignore-ssl-errors=true", "--ssl-protocol=tlsv1" });
-			driver = new PhantomJSDriver(caps);
-			driver.manage().window().setSize(new Dimension(1400, 1000));
+			// String caminhoPhantomJSEXE = new File("").getAbsolutePath() +
+			// "//resources//phantomjs.exe";
+			// System.setProperty("phantomjs.binary.path", caminhoPhantomJSEXE);
+			// DesiredCapabilities caps = new DesiredCapabilities();
+			// caps.setJavascriptEnabled(true);
+			// caps.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS,
+			// new String[] { "--web-security=no", "--ignore-ssl-errors=true",
+			// "--ssl-protocol=tlsv1" });
+			// driver = new PhantomJSDriver(caps);
+			System.setProperty("webdriver.chrome.driver",
+					new File("").getAbsolutePath() + "//resources//chromedriver.exe");
+			// System.setProperty("webdriver.gecko.driver", new
+			// File("").getAbsolutePath() + "//resources//geckodriver.exe");
+			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			ChromeOptions options = new ChromeOptions();
+			options.addArguments("test-type");
+			options.addArguments("start-maximized");
+			options.addArguments("user-data-dir=D:/temp/");
+			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+			driver = new ChromeDriver();
 			p = new Properties();
 
 			FileInputStream in = new FileInputStream(
 					new File("").getAbsolutePath() + "//resources//parametros.properties");
 			p.load(in);
 			in.close();
-			this.paginaInicial = p.getProperty("link.pagina.inicial");
-			driver.get(this.paginaInicial);
+			// this.paginaInicial = p.getProperty("link.pagina.inicial");
+			// driver.get(this.paginaInicial);
+			driver.get("https://nfe.prefeitura.sp.gov.br/login.aspx");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -169,7 +189,11 @@ public class Robo {
 					if (numero > 0 && i <= tablerow.size() - 2) {
 						WebElement link = cells.get(0);
 						System.out.println(link.getText());
+						JavascriptExecutor jse = (JavascriptExecutor) driver;
+						jse.executeScript("scroll(250, 0)"); 
 						link.click();
+
+						try {
 						driver = getHandleToWindowNota(driver);
 						WebElement img = driver.findElement(By.xpath("//*[@id='ctl00_cphBase_img']"));
 						String src = img.getAttribute("src");
@@ -182,6 +206,9 @@ public class Robo {
 						System.out.println(src);
 						driver.close();
 						driver = getHandleToWindow(driver);
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
 					}
 					contadorTotal += 1;
 				}
@@ -204,25 +231,45 @@ public class Robo {
 				.findElements(By.xpath("//*[@id='ctl00_cphPopUp_dgNotas']/tbody/tr[" + tamanhoLista + "]/td/a"));
 		for (WebElement aux : linksPaginas) {
 			try {
+				System.out.println(aux.getText());
 				if (aux.getText().trim().equals(String.valueOf(paginaAtual + 1))) {
 					System.out.println("LINK ABERTO: " + String.valueOf(paginaAtual + 1));
 					aux.click();
 				}
 			} catch (Exception e) {
-				// e.printStackTrace();
 			}
 		}
 	}
 
-	public PhantomJSDriver getHandleToWindow(PhantomJSDriver driver) {
+	private void mudarPagina1(WebDriver driver) {
+		List<WebElement> tablerow = driver.findElements(By.xpath("//*[@id='ctl00_cphPopUp_dgNotas']/tbody/tr"));
+		int tamanhoLista = 0;
+		if (tablerow != null) {
+			tamanhoLista = tablerow.size();
+		}
+		List<WebElement> linksPaginas = driver
+				.findElements(By.xpath("//*[@id='ctl00_cphPopUp_dgNotas']/tbody/tr[" + tamanhoLista + "]/td/a"));
+		for (WebElement aux : linksPaginas) {
+			try {
+				System.out.println(aux.getText());
+				if (aux.getText().trim().equals(String.valueOf(1))) {
+					System.out.println("LINK ABERTO: " + String.valueOf(1));
+					aux.click();
+				}
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	public ChromeDriver getHandleToWindow(ChromeDriver driver) {
 		String title = "Usuário: 63.059.273/0001-21 - NFS-e - Nota Fiscal de Serviços Eletrônica - São Paulo";
 		WebDriver popup = null;
 		Set<String> windowIterator = driver.getWindowHandles();
 		for (String s : windowIterator) {
 			String windowHandle = s;
-			popup = (PhantomJSDriver) driver.switchTo().window(windowHandle);
+			popup = (ChromeDriver) driver.switchTo().window(windowHandle);
 			if (popup.getTitle().trim().equals(title.trim())) {
-				return (PhantomJSDriver) popup;
+				return (ChromeDriver) popup;
 			}
 		}
 		return driver;
@@ -232,20 +279,20 @@ public class Robo {
 		driver.get("https://nfe.prefeitura.sp.gov.br/contribuinte/consultas.aspx");
 	}
 
-	private static PhantomJSDriver getHandleToWindowNota(PhantomJSDriver driver) {
+	private static ChromeDriver getHandleToWindowNota(ChromeDriver driver) {
 		WebDriver popup = null;
 		Set<String> windowIterator = driver.getWindowHandles();
 		for (String s : windowIterator) {
 			String windowHandle = s;
 			popup = driver.switchTo().window(windowHandle);
 			if (popup.getCurrentUrl().trim().contains("notaprint")) {
-				return (PhantomJSDriver) popup;
+				return (ChromeDriver) popup;
 			}
 		}
 		return driver;
 	}
 
-	public int contarTotalArquivosAntesDeBaixar() {
+	public int contarTotalArquivosAntesDeBaixar() throws InterruptedException {
 		int notasBaixar = 0;
 		driver = getHandleToWindow(driver);
 		List<WebElement> tablerow = driver.findElements(By.xpath("//*[@id='ctl00_cphPopUp_dgNotas']/tbody/tr"));
