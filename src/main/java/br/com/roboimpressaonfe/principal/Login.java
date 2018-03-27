@@ -104,7 +104,7 @@ public class Login {
 
 		cnpjField = new JFormattedTextField();
 		cnpjField.setBounds(142, 77, 183, 20);
-		cnpjField.setValue("cnpjEmpresa");
+		cnpjField.setValue("63.059.273/0001-21");
 		MaskFormatter maskData = new MaskFormatter("##.###.###/####-##");
 		maskData.install(cnpjField);
 		loginPanel.add(cnpjField);
