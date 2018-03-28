@@ -129,7 +129,7 @@ public class Robo {
 					.findElement(By.xpath("//*[@id='ctl00_wpMenuLateral_mnuRotinasn5']/td/table/tbody/tr/td[1]/a"));
 			caixaTipoNotasFiscais.click();
 			Select dropdown = new Select(driver.findElement(By.xpath("//*[@id='ctl00_body_ddlContribuinte']")));
-			dropdown.selectByIndex(1);
+			dropdown.selectByValue("10646116");
 			Select selectAno = new Select(driver.findElement(By.xpath("//*[@id='ctl00_body_ddlExercicio']")));
 			selectAno.selectByValue(String.valueOf(ano));
 			Select selectMes = new Select(driver.findElement(By.xpath("//*[@id='ctl00_body_ddlMes']")));
@@ -241,7 +241,7 @@ public class Robo {
 		}
 	}
 
-	private void mudarPagina1(WebDriver driver) {
+/*	private void mudarPagina1(WebDriver driver) {
 		List<WebElement> tablerow = driver.findElements(By.xpath("//*[@id='ctl00_cphPopUp_dgNotas']/tbody/tr"));
 		int tamanhoLista = 0;
 		if (tablerow != null) {
@@ -259,7 +259,7 @@ public class Robo {
 			} catch (Exception e) {
 			}
 		}
-	}
+	}*/
 
 	public ChromeDriver getHandleToWindow(ChromeDriver driver) {
 		String title = "Usuário: 63.059.273/0001-21 - NFS-e - Nota Fiscal de Serviços Eletrônica - São Paulo";
