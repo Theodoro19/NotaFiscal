@@ -262,7 +262,7 @@ public class Robo {
 	}*/
 
 	public ChromeDriver getHandleToWindow(ChromeDriver driver) {
-		String title = "Usuário: 63.059.273/0001-21 - NFS-e - Nota Fiscal de Serviços Eletrônica - São Paulo";
+		String title = "Usuario";
 		WebDriver popup = null;
 		Set<String> windowIterator = driver.getWindowHandles();
 		for (String s : windowIterator) {
