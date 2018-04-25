@@ -80,7 +80,7 @@ public class Login {
 	private void initializeLoginPanel() throws ParseException {
 		frame = new JFrame();
 
-		frame.setTitle("OMA - Impress„o de Notas Fiscais");
+		frame.setTitle("OMA - Impress√£o de Notas Fiscais");
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -104,7 +104,7 @@ public class Login {
 
 		cnpjField = new JFormattedTextField();
 		cnpjField.setBounds(142, 77, 183, 20);
-		cnpjField.setValue("63.059.273/0001-21");
+		cnpjField.setValue("cnpj");
 		MaskFormatter maskData = new MaskFormatter("##.###.###/####-##");
 		maskData.install(cnpjField);
 		loginPanel.add(cnpjField);
@@ -180,7 +180,7 @@ public class Login {
 		parametrosPanel = new JPanel();
 		frame = new JFrame();
 
-		frame.setTitle("OMA - Impress„o de Notas Fiscais");
+		frame.setTitle("OMA - Impress√£o de Notas Fiscais");
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -225,7 +225,7 @@ public class Login {
 				selectAno.setEnabled(false);
 				btnProsseguir.setEnabled(false);
 				statusLabel.setForeground(Color.BLUE);
-				statusLabel.setText("Validando as informaÁıes. Aguarde...");
+				statusLabel.setText("Validando as informa√ß√µes. Aguarde...");
 				frame.revalidate();
 				frame.repaint();
 				startProsseguir();
@@ -273,7 +273,7 @@ public class Login {
 							Integer.parseInt(String.valueOf(selectAno.getSelectedItem())), robo.getPastaTempCriada());
 				} catch (NoSuchElementException e) {
 					statusLabel.setForeground(Color.RED);
-					statusLabel.setText("Nenhuma nota encontrada para este perÌodo!");
+					statusLabel.setText("Nenhuma nota encontrada para este per√≠odo!");
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
